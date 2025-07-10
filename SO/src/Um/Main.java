@@ -4,61 +4,38 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
-	//A classe main será a barbearia 
-    private static final int TEMPO_SIMULACAO_MS = 60000;
+    private static final int TEMPO_SIMULACAO_MS = 90000;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		/*
-		System.out.println("Hello world");
-		MinhaThreadEx m1 = new MinhaThreadEx(1, 20, "Merticorten");
-		MinhaThreadEx m2 = new MinhaThreadEx(4, 8, "Predisin");
-		MinhaThreadEx m3 = new MinhaThreadEx(5, 10, "Berotec");*/
-		 // Capacidade da fila de espera 
+    public static void main(String[] args) {
         int capacidadeFila = 10;
+        int numBarbeiros = 2;
 
-        // Contador para as cadeiras de espera ocupadas.
-        // Usamos AtomicInteger para garantir que as operações sejam atômicas
-        // e seguras entre as threads.
+        Semaphore clientes = new Semaphore(0);
+        Semaphore barbeiros = new Semaphore(numBarbeiros);
+        Semaphore mutex = new Semaphore(1);
         AtomicInteger cadeirasOcupadas = new AtomicInteger(0);
 
-        // Semáforos para sincronização
-        // clientes: Contabiliza clientes esperando. O barbeiro espera neste semáforo.
-        Semaphore clientes = new Semaphore(0);
+        System.out.println("A barbearia abriu com " + numBarbeiros + " barbeiros e " + capacidadeFila + " cadeiras de espera.");
 
-        // barbeiros: Contabiliza barbeiros livres. O cliente espera neste semáforo. 
-        Semaphore barbeiros = new Semaphore(2); // Inicia com 2 barbeiros livres
-
-        // mutex: Garante acesso exclusivo à variável 'cadeirasOcupadas'
-        Semaphore mutex = new Semaphore(1);
-
-        System.out.println("A barbearia abriu com 2 barbeiros e " + capacidadeFila + " cadeiras de espera.");
-
-        // Criando e iniciando as threads dos barbeiros
-        for (int i = 1; i <= 2; i++) {
-            Barbeiro barbeiro = new Barbeiro(i, clientes, barbeiros, mutex);
-            Thread threadBarbeiro = new Thread(barbeiro);
-            threadBarbeiro.start();
+        // *** CORREÇÃO AQUI ***
+        // Passando os recursos da fila (cadeirasOcupadas e mutex) para o Barbeiro
+        for (int i = 1; i <= numBarbeiros; i++) {
+            Barbeiro barbeiro = new Barbeiro(i, clientes, barbeiros, cadeirasOcupadas, mutex); // Mudança aqui
+            new Thread(barbeiro, "Barbeiro-" + i).start();
         }
 
-        // Criando e iniciando a thread que gera os clientes
         GeradorClientes gerador = new GeradorClientes(capacidadeFila, cadeirasOcupadas, clientes, barbeiros, mutex);
-        Thread threadGerador = new Thread(gerador);
+        Thread threadGerador = new Thread(gerador, "GeradorClientes");
         threadGerador.start();
 
-        // Deixa a simulação rodar pelo tempo definido
         try {
             Thread.sleep(TEMPO_SIMULACAO_MS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
-        // Interrompe as threads após o tempo de simulação
         threadGerador.interrupt();
+        // A interrupção dos barbeiros e clientes será tratada em suas próprias threads
         System.out.println("\nA barbearia fechou. Não entram mais clientes.");
     }
-		
-
-	
-
 }

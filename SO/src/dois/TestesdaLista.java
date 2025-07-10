@@ -1,5 +1,4 @@
 package dois;
-
 public class TestesdaLista {
 
         public static void main(String[] args) throws InterruptedException {
