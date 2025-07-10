@@ -124,7 +124,7 @@ public class Benchmark16Thread {
                         }
                     } else if (opv.op == Operacao.REMOVER) {
                         ini = System.nanoTime();
-                        vector.remove(Integer.valueOf(opv.valor)); // Remover por objeto é mais seguro aqui
+                        vector.remove(Integer.valueOf(opv.valor));
                         fim = System.nanoTime();
                         r.tempoRemocao.addAndGet(fim - ini);
                         r.totalRemocao.incrementAndGet();
