@@ -10,8 +10,8 @@ class Barbeiro implements Runnable {
     private final Semaphore barbeiros;
     private final Random random = new Random();
 
-    // *** CORREÇÃO AQUI ***
-    // Barbeiro agora conhece a fila e o mutex
+    
+    // Barbeiro conhece a fila e o mutex
     private final AtomicInteger cadeirasOcupadas;
     private final Semaphore mutex;
 
@@ -27,10 +27,10 @@ class Barbeiro implements Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                clientes.acquire(); // 1. Espera (dorme) até que um cliente chegue e o sinalize.
+                clientes.acquire(); //  Dorme até que um cliente chegue e o sinalize.
 
-                // *** CORREÇÃO AQUI ***
-                // 2. O barbeiro foi acordado! Ele agora libera a cadeira que o cliente usava.
+                
+                //  O barbeiro foi acordado e vai atender. Ele agora libera a cadeira que o cliente usava.
                 mutex.acquire();
                 cadeirasOcupadas.decrementAndGet();
                 System.out.println("   -> Cliente levantou para o corte. Cadeiras de espera ocupadas: " + cadeirasOcupadas.get());
