@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class BenchmarkSingleThread {
 
     public static void main(String[] args) {
@@ -6,19 +9,18 @@ public class BenchmarkSingleThread {
         for (int tamanho : tamanhos) {
             System.out.println("=== Tamanho da lista: " + tamanho + " ===");
 
-            // Insercao
+            //Insercao
             long tempoSimplesInsercao = medirInsercaoSimples(tamanho);
             long tempoSeguraInsercao = medirInsercaoSegura(tamanho);
 
-            // Consulta
+            //Consulta
             long tempoSimplesBusca = medirBuscaSimples(tamanho);
             long tempoSeguraBusca = medirBuscaSegura(tamanho);
 
-            // Remocao
+            //Remocao
             long tempoSimplesRemocao = medirRemocaoSimples(tamanho);
             long tempoSeguraRemocao = medirRemocaoSegura(tamanho);
 
-            // resultados formatados com duas casas decimais
             System.out.printf("Insercao Lista Simples: %.2f ms | Operacoes/s: %.2f%n",
                     converterMs(tempoSimplesInsercao), calcularOpsPorSegundo(tamanho, tempoSimplesInsercao));
             System.out.printf("Insercao Lista Segura : %.2f ms | Operacoes/s: %.2f%n",
@@ -39,10 +41,10 @@ public class BenchmarkSingleThread {
     }
 
     static long medirInsercaoSimples(int n) {
-        ListaNaoThreadSafe<Integer> lista = new ListaNaoThreadSafe<>();
+        List<Integer> lista = new ArrayList<>();
         long inicio = System.nanoTime();
         for (int i = 0; i < n; i++) {
-            lista.adicionar(i);
+            lista.add(i);
         }
         return System.nanoTime() - inicio;
     }
@@ -57,11 +59,11 @@ public class BenchmarkSingleThread {
     }
 
     static long medirBuscaSimples(int n) {
-        ListaNaoThreadSafe<Integer> lista = new ListaNaoThreadSafe<>();
-        for (int i = 0; i < n; i++) lista.adicionar(i);
+        List<Integer> lista = new ArrayList<>();
+        for (int i = 0; i < n; i++) lista.add(i);
         long inicio = System.nanoTime();
         for (int i = 0; i < n; i++) {
-            lista.consultar(i);
+            lista.get(i);
         }
         return System.nanoTime() - inicio;
     }
@@ -77,11 +79,11 @@ public class BenchmarkSingleThread {
     }
 
     static long medirRemocaoSimples(int n) {
-        ListaNaoThreadSafe<Integer> lista = new ListaNaoThreadSafe<>();
-        for (int i = 0; i < n; i++) lista.adicionar(i);
+        List<Integer> lista = new ArrayList<>();
+        for (int i = 0; i < n; i++) lista.add(i);
         long inicio = System.nanoTime();
         for (int i = n - 1; i >= 0; i--) {
-            lista.remover(i);
+            lista.remove(i);
         }
         return System.nanoTime() - inicio;
     }
