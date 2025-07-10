@@ -17,7 +17,7 @@ public class Main {
 
         System.out.println("A barbearia abriu com " + numBarbeiros + " barbeiros e " + capacidadeFila + " cadeiras de espera.");
 
-        // *** CORREÇÃO AQUI ***
+        
         // Passando os recursos da fila (cadeirasOcupadas e mutex) para o Barbeiro
         for (int i = 1; i <= numBarbeiros; i++) {
             Barbeiro barbeiro = new Barbeiro(i, clientes, barbeiros, cadeirasOcupadas, mutex); // Mudança aqui
@@ -35,7 +35,7 @@ public class Main {
         }
 
         threadGerador.interrupt();
-        // A interrupção dos barbeiros e clientes será tratada em suas próprias threads
+        // A interrupção dos barbeiros e clientes será tratada nas próprias threads
         System.out.println("\nA barbearia fechou. Não entram mais clientes.");
     }
 }
